@@ -1,0 +1,227 @@
+{
+  "written": "2026-10-10T02:53:00Z",
+  "written_toronto": "2026-10-09 22:53 EDT",
+  "by": "Laptop session, pages loaded in Chrome on Blair's laptop",
+  "how_to_read": "One entry per manager from the 'own site known' table in docs/LANDLORD-SOURCES.md. Keyed by manager name because the ids in collect/sources/landlords.json were not visible from the laptop. Field names follow LANDLORD-SOURCES.md. The values of data_access are this file's own words: json-api, html, html+json-ld, html-embedded-json. Units are registry units from LANDLORD-SOURCES.md.",
+  "not_done": [
+    "No request was made from the VM. Whether a plain fetch gets the same answer is untested for every site.",
+    "robots.txt was read only on each landlord's own host, not on the API hosts (api.theliftsystem.com, lift-api.rentsync.com, website-gateway.rentsync.com, nestiolistings.com).",
+    "No site's terms of use were read.",
+    "Token and key values were deliberately not recorded. An adapter should read them from the page at run time."
+  ],
+  "managers": [
+    {
+      "manager": "Greenwin",
+      "units": 8880,
+      "status": "fetched",
+      "site": "https://www.greenwin.ca/",
+      "pages_loaded": [
+        "https://www.greenwin.ca/apartments-for-rent/88-erskine-ave",
+        "https://www.greenwin.ca/apartments-for-rent"
+      ],
+      "platform": "rentsync",
+      "platform_variant": "lift-api-classic",
+      "platform_evidence": "Images from assets.rentsync.com/greenwin/. Site script is /scripts/main.js. Search page calls api.theliftsystem.com/v2/search. Suite markup uses classes suite, suite-type, suite-bath, suite-sqft, suite-rate, suite-availability.",
+      "data_access": "json-api",
+      "data_endpoint": "https://api.theliftsystem.com/v2/search (query keys include client_id, auth_token, city_id, limit, offset, order, show_custom_fields). Returned a JSON array of 110 buildings, 41 with city Toronto.",
+      "data_fields": "Per building: id, name, permalink, address{address, city, postal_code}, geocode{latitude, longitude}, statistics.suites{rates{min,max}, bedrooms{min,max}, square_feet{min,max}}, matched_beds, availability_status, availability_count, min_availability_date.",
+      "unit_level": "unit type. The API is per building. The building page HTML has one row per suite type with baths, sqft, a 'FROM $X/mth' rent (rent_is_floor) and availability.",
+      "robots": "200. Disallow: /tmp, /admin, /mobile. Listing paths are allowed.",
+      "notes": "client_id and auth_token are supplied by the site's own script, not by an inline script on the page."
+    },
+    {
+      "manager": "MetCap Living",
+      "units": 7598,
+      "status": "fetched",
+      "site": "https://www.metcap.com/",
+      "pages_loaded": [
+        "https://metcap.com/",
+        "https://www.metcap.com/apartments-for-rent/ontario/ (redirects to /province/ontario)",
+        "https://www.metcap.com/property/15-dundonald-street-toronto-on-m4y-1k4/"
+      ],
+      "platform": "custom-wordpress",
+      "platform_evidence": "meta generator WordPress 7.0.7. Theme path /wp-content/themes/metcap/. Yoast robots block.",
+      "data_access": "html",
+      "data_endpoint": "None carrying unit rows. /wp-json/wp/v2/apartment answers 200 with 346 items, but each has only slug, link and title (acf is empty). Useful as an index of unit-type pages; rents are in the HTML.",
+      "unit_level": "unit type. A property page at /property/<street-city-postal>/ has one table with a rent per unit type and links to /apartment/<type>-at-<address> pages. The address is in the page title and the URL.",
+      "robots": "200. Yoast block, 'Disallow:' empty (everything allowed). Sitemap listed.",
+      "notes": "The province page showed no property links on first load; the property index was not found. The sitemap is the likely route."
+    },
+    {
+      "manager": "CAPREIT",
+      "units": 7459,
+      "status": "fetched",
+      "site": "https://www.capreit.ca/",
+      "pages_loaded": [
+        "https://www.capreit.ca/apartments-for-rent/toronto-on/yonge-eglinton-apartments-duplex/"
+      ],
+      "platform": "custom-wordpress",
+      "platform_evidence": "WPML generator tag, /wp-content/plugins/elementor/, Schema App scripts (cdn.schemaapp.com, path CAPREIT). EliseAI chat widget.",
+      "data_access": "html+json-ld",
+      "data_endpoint": "None. /wp-json/wp/v2/types answers 403. The page carries JSON-LD of type Apartment with address, geo and offers.",
+      "unit_level": "unit type. Rows with class property-options-list-item give bedrooms, 'Starting at $X - $Y', 'Up to N Sq Ft' and availability text ('Available Immediately' or 'No Vacancies').",
+      "robots": "200. Disallow: /wp-admin/. Sitemap: /sitemaps.xml.",
+      "notes": "Rent is a range per unit type."
+    },
+    {
+      "manager": "Homestead",
+      "units": 6123,
+      "status": "fetched",
+      "site": "https://www.homestead.ca/",
+      "pages_loaded": [
+        "https://www.homestead.ca/apartments/140-erskine-avenue-toronto (redirects to /residential/140-erskine-avenue-toronto)"
+      ],
+      "platform": "rentsync",
+      "platform_variant": "website-gateway",
+      "platform_evidence": "Scripts from cdn.rentsync.com. Page calls website-gateway.rentsync.com/v1/homestead_rebuild/... for properties, units, unit-summary, floorplans, amenities.",
+      "data_access": "json-api",
+      "data_endpoint": "https://website-gateway.rentsync.com/v1/homestead_rebuild/units (keys where, limit) returned 750 of 1,754 unit rows. Also /properties and /properties/unit-summary (149 properties).",
+      "data_fields": "Per unit: id, buildingId, typeName, number, bed, bath, sqFt, rate, rateMin, rateMax, available, availability, availabilityDate, floor.",
+      "unit_level": "individual unit",
+      "robots": "200. 'Allow: /' for all agents. Sitemap listed.",
+      "notes": "An in-page fetch with no added headers got 200, so no custom header is needed. Whether the gateway checks the Origin header is untested."
+    },
+    {
+      "manager": "Hazelview",
+      "units": 4088,
+      "status": "fetched",
+      "site": "https://www.hazelviewproperties.com/",
+      "pages_loaded": [
+        "https://www.hazelviewproperties.com/properties/103-west-lodge",
+        "https://www.hazelviewproperties.com/residential/cities/toronto"
+      ],
+      "platform": "rentsync",
+      "platform_variant": "lift-api-classic",
+      "platform_evidence": "Same /scripts/main.js and robots.txt pattern as Greenwin. Assets from assets.rentsync.com and cdn.theliftsystem.com. Footer has a rentsync-logo element. City page calls lift-api.rentsync.com/v2/search.",
+      "data_access": "json-api",
+      "data_endpoint": "https://lift-api.rentsync.com/v2/search (keys include client_id, client_key, auth_token, city_id, limit, offset). Returned 47 buildings, 21 with city Toronto.",
+      "unit_level": "unit type (same shape as Greenwin; not opened on a live building page)",
+      "robots": "200. Disallow: /tmp, /admin, /mobile and two named properties.",
+      "notes": "The site loaded normally in Chrome with no challenge page. The VM's plain fetch got 403. The page for 103 West Lodge is almost empty (title 'properties', 717 characters of text), which fits the registry being out of date for that building."
+    },
+    {
+      "manager": "Pinedale",
+      "units": 3702,
+      "status": "fetched",
+      "site": "https://pinedaleprop.com/",
+      "pages_loaded": [
+        "https://pinedaleprop.com/listings/7-9-11-crescent-place/"
+      ],
+      "platform": "custom-wordpress",
+      "platform_evidence": "Theme path /wp-content/themes/infringe/. Assets from pinedale.wpengine.com. WP Google Maps plugin.",
+      "data_access": "html",
+      "data_endpoint": "None found.",
+      "unit_level": "none seen. The one building page loaded shows no rent and no unit rows, only contact details.",
+      "robots": "200. Disallow: /wp-admin/. Crawl-delay: 10. Sitemap: /wp-sitemap.xml.",
+      "notes": "Only one page checked. On this evidence the site lists buildings, not availability."
+    },
+    {
+      "manager": "Akelius",
+      "units": 3666,
+      "status": "fetched",
+      "site": "https://rent.akelius.com/",
+      "pages_loaded": [
+        "https://rent.akelius.com/en/search/canada/apartment?profit-center=50080"
+      ],
+      "platform": "own-app",
+      "platform_evidence": "Angular app (ng-version attribute, hashed main-*.js). Server-rendered, with a JSON state block in script#akeliusWebsite-state (about 890 KB).",
+      "data_access": "html-embedded-json",
+      "data_endpoint": "No separate data request on first load. The unit data is in the embedded state block.",
+      "unit_level": "individual unit. Each card has street address, floor, sqft and rent, and links to /en/search/canada/detail/<unit-id>.",
+      "robots": "200. 'User-agent: *' with no rules.",
+      "notes": "profit-center=50080 is a Montreal building (3460 Peel Street). The filter value for Toronto buildings was not found."
+    },
+    {
+      "manager": "QuadReal",
+      "units": 2617,
+      "status": "fetched",
+      "site": "https://quadrealresidential.com/",
+      "pages_loaded": [
+        "https://www.quadrealresidential.com/",
+        "https://quadrealresidential.com/toronto/25-rosehill/",
+        "https://quadrealresidential.com/toronto/25-rosehill/floorplans/"
+      ],
+      "platform": "custom-wordpress",
+      "platform_variant": "funnel-leasing-behind",
+      "platform_evidence": "Theme path /wp-content/themes/quadreal/. Leasing by Funnel (formerly Nestio): scripts from integrations.funnelleasing.com and chatbot.funnelleasing.com, and a call to nestiolistings.com/api/v2/communities/10171/.",
+      "data_access": "html",
+      "data_endpoint": "No unit request seen. The only nestiolistings.com call was for contact info. The /floorplans/ page is server-rendered.",
+      "unit_level": "floorplan, possibly unit. /<area>/<building>/floorplans/ has 11 floorplan cards, each with bedrooms, a price range and its own table.",
+      "robots": "200. Crawl-delay: 10. Yoast block, everything allowed. Sitemap listed.",
+      "notes": "Covers both registry rows (QuadReal Property Group and QuadReal Residential Properties GP). A cookie banner appears; nothing was clicked."
+    },
+    {
+      "manager": "Minto",
+      "units": 2593,
+      "status": "fetched",
+      "site": "https://www.mintoapartments.com/",
+      "pages_loaded": [
+        "https://www.minto.com/",
+        "https://www.mintoapartments.com/",
+        "https://www.mintoapartments.com/gta/apartment-rentals/projects.html",
+        "https://www.mintoapartments.com/gta/Toronto-apartment-rentals/High-Park-Village/main.html"
+      ],
+      "platform": "own-cms",
+      "platform_evidence": "Own URL scheme (/gta/<Area>-apartment-rentals/<Name>/main.html) and /vendor/frontend/ scripts. Rentsync supplies only a floorplan widget (cdn.rentsync.com/site/fpn/floorplan-navigator.min.js).",
+      "data_access": "html",
+      "data_endpoint": "None found. Unit cards are server-rendered.",
+      "unit_level": "unit type. Cards with class projects-apartamets-unit-card carry unit_name, price and an availability button.",
+      "robots": "Odd: /robots.txt answers HTTP 404 on both hosts but the body is a robots file (sitemap line and Disallow rules). Needs a human read.",
+      "notes": "Rentals live on mintoapartments.com, not minto.com. Both loaded normally in Chrome. The VM's plain fetch got 403 from minto.com."
+    },
+    {
+      "manager": "RPMS",
+      "units": 1939,
+      "status": "fetched",
+      "site": "https://www.rpmsi.ca/",
+      "pages_loaded": [
+        "https://www.rpmsi.ca/property/huntley-apartments-77-huntley/"
+      ],
+      "platform": "custom-wordpress",
+      "platform_evidence": "Same WPML generator tag as capreit.ca. Schema App path is CAPREIT/RPMS, which says this is a CAPREIT site.",
+      "data_access": "html",
+      "data_endpoint": "None found.",
+      "unit_level": "unit type. One table with price and availability cells (three rents on the page loaded).",
+      "robots": "200. Yoast block, everything allowed. Sitemap: /sitemap_index.xml.",
+      "notes": "Same owner and builder as capreit.ca, but the unit markup is different, so one parser will not do both."
+    },
+    {
+      "manager": "Concert",
+      "units": 1028,
+      "status": "fetched",
+      "site": "https://rent.concertproperties.com/",
+      "pages_loaded": [
+        "https://concertproperties.com/commercial/570-bay-street",
+        "https://www.concertproperties.com/rentals",
+        "https://www.concertproperties.com/rentals/list/greater-toronto (redirects to https://rent.concertproperties.com/greater-toronto/rentals)"
+      ],
+      "platform": "yardi-rentcafe",
+      "platform_evidence": "Rental pages are on rent.concertproperties.com with page title ending '| RENTCafe', a call to t.rentcafe.com, and a link to rent-concertproperties.securecafe.com. The corporate site is Drupal.",
+      "data_access": "html",
+      "data_endpoint": "None seen on the list page.",
+      "unit_level": "building range on the list page (beds, baths, sqft and rent ranges for 7 Greater Toronto properties). Building pages at /<area>/<slug> were not opened.",
+      "robots": "rent.concertproperties.com: 200. Disallow: /refs/, /runtimes/, /wwwroot/, /js/, /lib/, /dashboard/.",
+      "notes": "The 570 Bay Street page is under /commercial/ and shows Drupal's 'Access denied' page to everyone, which fits the registry being out of date for that building."
+    },
+    {
+      "manager": "Tricon",
+      "units": 1003,
+      "status": "fetched",
+      "site": "https://triconliving.com/",
+      "pages_loaded": [
+        "https://triconresidential.com/region/toronto (redirects to https://triconliving.com/ca/toronto-communities/)",
+        "https://triconliving.com/apartment/the-spoke/",
+        "https://triconliving.com/api/v1/apartments/the-spoke"
+      ],
+      "platform": "custom-wordpress",
+      "platform_variant": "own-json-api",
+      "platform_evidence": "WordPress with an in-house plugin (/wp-content/plugins/tricon-vue-blocks/). Building pages call the site's own /api/v1/.",
+      "data_access": "json-api",
+      "data_endpoint": "https://triconliving.com/api/v1/apartments/<slug> and https://triconliving.com/api/v1/regions. No key in the URL.",
+      "data_fields": "address{street_address, city, zip}, lat, lng, ranges{min_rent, max_rent, min_beds, max_beds, min_sqft, max_sqft}, floorplans[], units[] (52 units for The Spoke).",
+      "unit_level": "individual unit",
+      "robots": "200. Disallow: /admin/, /wp-admin/. The rest of the file was not read past the first lines.",
+      "notes": "triconresidential.com now redirects to triconliving.com."
+    }
+  ]
+}

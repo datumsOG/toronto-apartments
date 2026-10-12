@@ -1,0 +1,132 @@
+/* The building map: layout only. Controls, type and colour come from the kit
+   (kit/ember-ui.css, release 1.0.0, never edited). Every pane keeps the kit's 16 px
+   padding, so nothing sits in the band that bends the map (kit rule 2), and no pane
+   holds another (rule 3). */
+
+:root {
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --safe-left: env(safe-area-inset-left, 0px);
+  --safe-right: env(safe-area-inset-right, 0px);
+}
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  background: #000; color: var(--e-ink);
+  font-family: var(--e-font);
+  -webkit-font-smoothing: antialiased;
+  overflow: hidden; overscroll-behavior: none;
+}
+#map { position: absolute; inset: 0; }
+
+/* Until the shader draws its first frame, or on a phone that cannot run it, a glass
+   pane is ordinary CSS glass so it is never bare (as in Pulse). */
+body:not(.lg) .e-pane[data-glass] {
+  background: var(--e-pane);
+  -webkit-backdrop-filter: var(--e-pane-blur); backdrop-filter: var(--e-pane-blur);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.09), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+/* MapLibre's own chrome, kept quiet and under the panes */
+.maplibregl-ctrl-attrib { background: rgba(0,0,0,0.42) !important; font-size: 8px !important; }
+.maplibregl-ctrl-bottom-left, .maplibregl-ctrl-bottom-right { z-index: 1 !important; }
+.maplibregl-ctrl-top-right { margin-top: var(--safe-top); margin-right: var(--safe-right); z-index: 1 !important; }
+.maplibregl-ctrl-attrib a { color: rgba(255,255,255,0.5) !important; }
+/* A glass pane is a light tint over the canvas (the refraction is drawn IN the canvas),
+   so DOM under a pane shows through it. The credits step aside while the sheet is up. */
+
+#status {
+  position: absolute; inset: 0; display: grid; place-items: center; z-index: 40; padding: 24px;
+  text-align: center;
+  font: 400 var(--e-t-label)/1.3 var(--e-font); color: var(--e-ink-3); background: #000;
+  transition: opacity 0.6s ease;
+}
+#status.gone { opacity: 0; pointer-events: none; }
+
+/* host-maplibre.js draws no glass until #ui has .ready */
+#ui { position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0; transition: opacity 0.6s ease 0.1s; }
+#ui.ready { opacity: 1; }
+#ui > * { pointer-events: auto; }
+[hidden] { display: none !important; }
+
+/* ── the bottom pane: ramp (half the pane at most), switch, tilt stick, compass ── */
+#bottom {
+  position: absolute; left: calc(var(--safe-left) + 12px); right: calc(var(--safe-right) + 12px);
+  bottom: calc(var(--safe-bottom) + 12px);
+  display: grid; row-gap: 12px; justify-items: end;
+}
+#ui > #bottom { pointer-events: none; }      /* the gap beside the compass stays draggable map */
+#bottom > * { pointer-events: auto; }
+#legend {
+  justify-self: stretch;
+  display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center;
+  column-gap: 12px;
+}
+/* Half the pane's inner width, or whatever the three controls leave on a narrow phone. */
+#legend-body { display: grid; row-gap: 6px; min-width: 0; max-width: calc((100vw - 56px - var(--safe-left) - var(--safe-right)) / 2); }
+#mode button { padding: 0 10px; }
+
+/* The compass: a 48 px round glass pane of its own. Red is north. */
+#compass { width: 48px; height: 48px; padding: 0; border: 0; border-radius: 50%; cursor: pointer; color: inherit; }
+#compass svg { width: 100%; height: 100%; display: block; }
+
+/* The tilt stick: a groove in the pane, and a knob that springs back to the middle. The
+   knob is a glass button while the shader draws, an opaque white thumb when it cannot. */
+#stick {
+  position: relative; width: 40px; height: 76px; border-radius: 20px; touch-action: none; cursor: grab;
+  background: var(--e-well);
+  box-shadow: inset 0 1.5px 2px var(--e-lip-dark), inset 0 -1px 0 var(--e-lip-light);
+}
+#stick-knob {
+  position: absolute; left: 4px; top: 22px; width: 32px; height: 32px; border-radius: 50%;
+  background: var(--e-ink); box-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+  transition: transform 0.18s ease-out;
+}
+body.lg #stick-knob[data-glass="button"]:not([data-glass-off]) { background: transparent; box-shadow: none; }
+#stick.held { cursor: grabbing; }
+#stick.held #stick-knob { transition: none; }
+
+#legend .ramp { height: 10px; border-radius: 5px; box-shadow: 0 0 0 1px rgba(0,0,0,0.45); }
+#legend .ramp-ticks { display: flex; justify-content: space-between; }
+#legend .e-key.lit i { box-shadow: 0 0 0 1.5px #fff; }
+#legend .e-key.dim i { opacity: 0.25; }
+
+/* ── the sheet ───────────────────────────────────────────────────────────── */
+#sheet {
+  position: absolute; left: calc(var(--safe-left) + 12px); right: calc(var(--safe-right) + 12px);
+  bottom: calc(var(--safe-bottom) + 12px);
+  max-width: 560px; margin: 0 auto;
+  max-height: min(62vh, 560px);
+  display: grid; grid-template-columns: 1fr auto; grid-template-rows: minmax(0, 1fr);
+  column-gap: 8px;
+}
+#close { grid-column: 2; grid-row: 1; align-self: start; }
+#close svg { width: 18px; height: 18px; }
+/* The scroller sits inside the pane's padding, so scrolled text is clipped 16 px in. */
+#sheet-body { grid-column: 1; grid-row: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain; }
+#sheet-body h2 { margin: 6px 0 12px; }
+.facts { display: grid; grid-template-columns: 6.5em 1fr; column-gap: 16px; row-gap: 6px; margin: 0 0 16px;
+  font: 400 15px/1.35 var(--e-font); }
+.facts dt { color: var(--e-ink-2); font-weight: 600; }
+.facts dd { margin: 0; font-variant-numeric: tabular-nums; }
+#gmaps { text-decoration: none; margin-bottom: 2px; }
+
+.avail-head { margin: 0 0 8px; }
+.avail-note { margin: 0 0 14px; }
+.units { list-style: none; margin: 0 0 16px; padding: 0; display: grid; row-gap: 10px; }
+.units li { display: grid; grid-template-columns: 5.5em 1fr; column-gap: 12px; row-gap: 4px; align-items: baseline; }
+.u-beds { font-weight: 600; }
+.u-rent { font-weight: 700; }
+.u-when { grid-column: 1 / -1; }
+.u-links { grid-column: 1 / -1; display: flex; flex-wrap: wrap; gap: 8px; }
+.u-links .src { min-height: 34px; padding: 0 12px; font-size: 13px; text-decoration: none; }
+
+/* A wide screen: the sheet is a column on the right instead of a bottom sheet. */
+@media (min-width: 720px) {
+  #sheet { left: auto; top: calc(var(--safe-top) + 12px); width: 400px; margin: 0;
+    max-height: none; }
+}
+
+/* Home-screen mode, reached from blairz.ca (index.html): the way back. */
+#site-back { position: absolute; top: calc(env(safe-area-inset-top, 0px) + 12px); left: 12px; pointer-events: auto; z-index: 5; }

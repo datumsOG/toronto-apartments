@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#000000">
+<title>Toronto rental buildings</title>
+<meta name="description" content="Every purpose-built rental apartment building in Toronto's registry, sized by units and coloured by inspection score.">
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="kit/ember-ui.css?v=1.0.0" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="kit/ember-ui.js?v=1.0.0" defer></script>
+<script type="module" src="js/app.js"></script>
+</head>
+<body>
+<div id="map"></div>
+<div id="status">Loading</div>
+
+<div id="ui">
+  <!-- One pane, one row: score ramp, the switch, the tilt stick. The stick's
+       knob is a glass button drawn by the kit's shader (data-skin="glass"). -->
+  <div id="bottom">
+    <!-- The compass is a small glass pane of its own, above the main pane on the right. -->
+    <button id="compass" class="e-pane" data-glass type="button" aria-label="Turn the map north up">
+        <svg viewBox="-24 -24 48 48" aria-hidden="true"><g id="needle">
+          <text x="0" y="-14.5" text-anchor="middle" font-size="7.5" font-weight="800" fill="#ff3b30" font-family="system-ui, sans-serif">N</text>
+          <path d="M0 -12 L5.5 0 L-5.5 0 Z" fill="#ff3b30"/>
+          <path d="M0 12 L5.5 0 L-5.5 0 Z" fill="#ffffff"/>
+        </g></svg>
+      </button>
+    <div id="legend" class="e-pane" data-glass data-skin="glass">
+      <div id="legend-body"></div>
+      <div id="mode" class="e-seg" role="group" aria-label="Which buildings">
+        <button type="button" value="private" aria-pressed="true">Private</button>
+        <button type="button" value="all" aria-pressed="false">All</button>
+      </div>
+      <div id="stick" role="slider" aria-label="Tilt: pull up or down" aria-orientation="vertical" tabindex="0"><i id="stick-knob" data-glass="button"></i></div>
+    </div>
+  </div>
+
+  <!-- Well skin, not glass: the sheet scrolls, and a glass button scrolled out of view
+       would still be drawn by the shader, outside the pane. -->
+  <section id="sheet" class="e-pane" data-glass data-skin="well" hidden aria-live="polite">
+    <button id="close" class="e-btn e-btn--icon" type="button" aria-label="Close">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M5 5l10 10M15 5L5 15"/></svg>
+    </button>
+    <div id="sheet-body"></div>
+  </section>
+</div>
+<!-- Reached from the blairz.ca home page inside its home-screen icon there is no browser
+     bar, so no way back (Blair, 2026-10-10). Only then does the app show a back button. -->
+<script>
+(() => {
+  const standalone = (window.matchMedia && matchMedia('(display-mode: standalone)').matches) || navigator.standalone === true;
+  let fromSite = false;
+  try { const r = new URL(document.referrer); fromSite = r.origin === location.origin && !r.pathname.startsWith(new URL('.', location.href).pathname); } catch (e) {}
+  if (!(standalone && fromSite) && !/[?&]standalone=1\b/.test(location.search)) return;
+  const a = document.createElement('a');
+  a.id = 'site-back'; a.className = 'e-btn e-btn--icon'; a.href = '/'; a.setAttribute('aria-label', 'Back to blairz.ca');
+  a.innerHTML = '<svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12.5 4.5L7 10l5.5 5.5"/></svg>';
+  document.getElementById('ui').appendChild(a);
+})();
+</script>
+</body>
+</html>

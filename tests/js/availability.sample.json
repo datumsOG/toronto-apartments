@@ -1,0 +1,22 @@
+{
+  "generated": "2026-10-09T22:00:00Z",
+  "coverage": {"units_private": 260335, "units_covered": 5210, "share": 0.02, "buildings_covered": 3},
+  "sources": [
+    {"id": "example", "name": "Example Landlord", "tier": 1, "last_ok": "2026-10-09T21:58:00Z",
+     "last_run": "2026-10-09T21:58:00Z", "listings": 3, "matched": 3, "state": "ok"}
+  ],
+  "buildings": {
+    "9000001": {
+      "sources": ["example"],
+      "units": [
+        {"beds": 1, "baths": 1, "sqft": 620, "rent": 2350, "available": "2026-11-01",
+         "first_seen": "2026-10-02", "last_seen": "2026-10-09",
+         "links": [{"source": "example", "url": "https://example.com/listing/1"}]},
+        {"beds": 0, "baths": 1, "sqft": null, "rent": 1795, "rent_is_floor": true, "available": null,
+         "first_seen": "2026-10-09", "last_seen": "2026-10-09",
+         "links": [{"source": "example", "url": "javascript:alert(1)"}]}
+      ]
+    },
+    "9000002": {"sources": ["example"], "units": []}
+  }
+}

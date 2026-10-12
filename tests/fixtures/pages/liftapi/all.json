@@ -1,0 +1,178 @@
+[
+ {
+  "permalink": "https://www.greenwin.ca/apartments-for-rent/88-erskine-ave",
+  "property_type": "High-rise-apartment",
+  "address": {
+   "address": "88 Erskine Ave.",
+   "city": "Toronto",
+   "postal_code": "M4P 1Y3"
+  },
+  "geocode": {
+   "latitude": "43.712373",
+   "longitude": "-79.39604709999999",
+   "distance": null
+  },
+  "statistics": {
+   "suites": {
+    "rates": {
+     "min": 1599.0,
+     "max": 2499.0,
+     "average": 2049.0
+    },
+    "square_feet": {
+     "min": "400.0",
+     "max": "800.0",
+     "average": 550.0
+    },
+    "bedrooms": {
+     "min": 0,
+     "max": 2,
+     "average": "1.0"
+    }
+   }
+  },
+  "matched_beds": [
+   "0",
+   "1",
+   "2"
+  ],
+  "matched_suite_names": [
+   "Bachelor",
+   "1 Bedroom",
+   "2 Bedroom"
+  ],
+  "availability_count": 4,
+  "availability_status": 1,
+  "min_availability_date": ""
+ },
+ {
+  "permalink": "https://www.greenwin.ca/properties/300-and-330-winnett-ave",
+  "property_type": "Low-rise-apartment",
+  "address": {
+   "address": "300 & 330 Winnett Ave.",
+   "city": "Toronto",
+   "postal_code": "M6C 3L9"
+  },
+  "geocode": {
+   "latitude": "43.6919776",
+   "longitude": "-79.4346667",
+   "distance": null
+  },
+  "statistics": {
+   "suites": {
+    "rates": {
+     "min": 1495.0,
+     "max": 2100.0,
+     "average": 1797.5
+    },
+    "square_feet": {
+     "min": "0.0",
+     "max": "0.0",
+     "average": 0.0
+    },
+    "bedrooms": {
+     "min": 0,
+     "max": 2,
+     "average": "1.0"
+    }
+   }
+  },
+  "matched_beds": [
+   "0",
+   "1",
+   "2"
+  ],
+  "matched_suite_names": [
+   "Bachelor",
+   "1 Bedroom (Large)",
+   "2 Bedroom"
+  ],
+  "availability_count": 1,
+  "availability_status": 1,
+  "min_availability_date": ""
+ },
+ {
+  "permalink": "https://greenwin.ca/apartments-for-rent/details/130-highland-rd-e",
+  "property_type": "Office",
+  "address": {
+   "address": "130 Highland Rd. E.",
+   "city": "Kitchener",
+   "postal_code": "N2M 3V9"
+  },
+  "geocode": {
+   "latitude": "43.4395012",
+   "longitude": "-80.49369639999999",
+   "distance": null
+  },
+  "statistics": {
+   "suites": {
+    "rates": {
+     "min": 25.5,
+     "max": 25.5,
+     "average": 25.5
+    },
+    "square_feet": {
+     "min": "711.0",
+     "max": "711.0",
+     "average": 711.0
+    },
+    "bedrooms": {
+     "min": 0,
+     "max": 0,
+     "average": "0.0"
+    }
+   }
+  },
+  "matched_beds": [
+   "0"
+  ],
+  "matched_suite_names": [
+   "Unit 4"
+  ],
+  "availability_count": 1,
+  "availability_status": 1,
+  "min_availability_date": ""
+ },
+ {
+  "permalink": "https://greenwin.ca/apartments-for-rent/details/130-highland-rd-e",
+  "property_type": "Office",
+  "address": {
+   "address": "130 Highland Rd. E.",
+   "city": "Kitchener",
+   "postal_code": "N2M 3V9"
+  },
+  "geocode": {
+   "latitude": "43.4395012",
+   "longitude": "-80.49369639999999",
+   "distance": null
+  },
+  "statistics": {
+   "suites": {
+    "rates": {
+     "min": 25.5,
+     "max": 25.5,
+     "average": 25.5
+    },
+    "square_feet": {
+     "min": "711.0",
+     "max": "711.0",
+     "average": 711.0
+    },
+    "bedrooms": {
+     "min": 0,
+     "max": 0,
+     "average": "0.0"
+    }
+   }
+  },
+  "matched_beds": [
+   "0"
+  ],
+  "matched_suite_names": [
+   "Unit 4"
+  ],
+  "availability_count": 1,
+  "availability_status": 1,
+  "min_availability_date": ""
+ }
+]
