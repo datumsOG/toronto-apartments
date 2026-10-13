@@ -111,6 +111,7 @@ body.lg #stick-knob[data-glass="button"]:not([data-glass-off]) { background: tra
 .facts dt { color: var(--e-ink-2); font-weight: 600; }
 .facts dd { margin: 0; font-variant-numeric: tabular-nums; }
 #gmaps { text-decoration: none; margin-bottom: 2px; }
+#layouts { text-decoration: none; margin-bottom: 10px; }
 
 .avail-head { margin: 0 0 8px; }
 .avail-note { margin: 0 0 14px; }

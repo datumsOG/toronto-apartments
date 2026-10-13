@@ -7,5 +7,6 @@ cd (internal path) || exit 1
 echo "=== $(date -u +%Y-%m-%dT%H:%M:%SZ)"
 # The home route (the tablet at the house) is used only for hosts an adapter names.
 export APARTMENTS_PROXY=http://127.0.0.1:1056
-python3 -m collect.run && ./publish.sh
+# Which buildings have floor plans on their landlord's site (links only; never fatal).
+python3 -m collect.run && { python3 -m build.layouts || echo 'layouts: failed, kept the old file'; } && ./publish.sh
 echo "exit $?"

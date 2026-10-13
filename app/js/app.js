@@ -20,6 +20,7 @@ const state = {
   byId: new Map(),
   managers: [],
   avail: null,              // null: no availability.json, or it did not parse
+  layouts: {},              // building id -> { url, plans }: the landlord's page of floor plans
   view: { mode: 'private' },
   selected: null,
 };
@@ -44,6 +45,19 @@ async function loadAvailability() {
     return parseAvailability(await r.text());
   } catch (e) {
     return null;
+  }
+}
+
+// data/layouts.json (build/layouts.py): for a building, the landlord's own page that shows its
+// floor plans, and how many it has. Optional. The map links to that page and shows no plan
+// itself (photos and plans are stored, never shown here).
+async function loadLayouts() {
+  try {
+    const r = await fetch('data/layouts.json', { cache: 'no-cache' });
+    if (!r.ok) return {};
+    return (await r.json()).buildings || {};
+  } catch (e) {
+    return {};
   }
 }
 
@@ -333,6 +347,8 @@ function openSheet(b) {
     ? 'Never evaluated' : `${b.score} out of 100${b.score_year ? ` (${b.score_year})` : ''}`;
   const mgr = b.mgr === null || b.mgr === undefined ? null : state.managers[b.mgr];
   const parking = (b.parking || []).map((p) => PARKING[p] || p).join(', ');
+  const lay = state.layouts[b.id], layUrl = lay && safeUrl(lay.url);
+  const layoutsBtn = layUrl ? `<a class="e-btn" id="layouts" href="${escapeHtml(layUrl)}" target="_blank" rel="noopener noreferrer">${lay.plans === 1 ? '1 layout' : `${fmtInt(lay.plans)} layouts`} on the landlord's site</a>` : '';
   $('sheet-body').innerHTML = `
     <h2 class="e-title">${escapeHtml(b.addr)}</h2>
     ${unitsHtml(b)}
@@ -351,6 +367,7 @@ function openSheet(b) {
       ${row('Elevators', f.elevators)}
       ${row('Smoking', f.nonsmoking === true ? 'Non-smoking building' : f.nonsmoking === false ? 'Allowed' : null)}
     </dl>
+    ${layoutsBtn}
     <a class="e-btn" id="gmaps" href="${googleMapsUrl(b)}" target="_blank" rel="noopener noreferrer">Open in Google Maps</a>`;
   $('sheet-body').scrollTop = 0;
   $('sheet').hidden = false;
@@ -514,10 +531,11 @@ function tiltStick() {
 async function boot() {
   const status = $('status');
   try {
-    const [doc, avail] = await Promise.all([loadBuildings(), loadAvailability()]);
+    const [doc, avail, layouts] = await Promise.all([loadBuildings(), loadAvailability(), loadLayouts()]);
     state.buildings = doc.buildings || [];
     state.managers = doc.managers || [];
     state.avail = avail;
+    state.layouts = layouts;
     for (const b of state.buildings) state.byId.set(b.id, b);
     renderLegend();
 
