@@ -120,7 +120,7 @@ class Fetcher:
             handlers.append(urllib.request.ProxyHandler({}))
         self.opener = urllib.request.build_opener(*handlers)
         # home_hosts: the hosts that refuse a data-centre address and are asked over the home
-        # route instead (home_proxy; see (internal path)). Every
+        # route instead (home_proxy; see internal/residential-egress.md). Every
         # other host is asked directly. Without a home_proxy they are asked directly too,
         # and the refusal is recorded as a block.
         self.home_hosts = set(home_hosts) if home_proxy else set()

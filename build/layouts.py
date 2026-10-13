@@ -3,7 +3,7 @@
 
     python3 -m build.layouts          # writes app/data/layouts.json
 
-The plans themselves are in the apartment database ((internal path), stored,
+The plans themselves are in the apartment database (apartment-data/, stored,
 never shown: CLAUDE.md). This writes only what the public map may carry: for a building, the
 landlord's own page that shows its plans, and how many plans that page has. The map links
 to that page. No plan image or address of one goes into app/.
@@ -15,7 +15,7 @@ more than one, is left out and counted. Standard library only.
 import collections, datetime, json, pathlib, sqlite3
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
-DATABASE = pathlib.Path('(internal path)')
+DATABASE = pathlib.Path('apartment-data/apartments.db')
 STATE = ROOT / 'collect/state.db'
 OUT = ROOT / 'app/data/layouts.json'
 
